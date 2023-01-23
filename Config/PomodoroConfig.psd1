@@ -2,6 +2,7 @@ $config = @{
     activeTime = 0
     breakTime = 0
     amountPomodoros = 0
+    pomodoroPreviews = 3
     sounds = @{
         default = @{
             start = "biggie-baka-baka-baka.wav"

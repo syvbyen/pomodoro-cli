@@ -3,8 +3,9 @@ class FormatHost {
         $colors = @{
             Info = @{ foregroundColor = 'White'; backgroundColor = 'Blue' }
             InfoHeader = @{ foregroundColor = 'White'; backgroundColor = 'DarkBlue' }
-            Success = @{ foregroundColor = 'DarkGreen'; backgroundColor = 'Green' }
+            Success = @{ foregroundColor = 'White'; backgroundColor = 'DarkGreen' }
             Danger = @{ foregroundColor = 'White'; backgroundColor = 'DarkRed' }
+            Warning = @{ foregroundColor = 'White'; backgroundColor = 'DarkYellow' }
         }
 
         if (! $colors.ContainsKey($type)) {
