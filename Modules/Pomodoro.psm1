@@ -1,4 +1,5 @@
 Import-Module (Resolve-Path "$PSScriptRoot/FormatHost.psm1") -Force
+Import-Module (Resolve-Path "$PSScriptRoot/../Repositories/ConfigRepository.psm1") -Force
 # Import-Module (Resolve-Path "$PSScriptRoot/../Config/PomodoroConfig.psd1") -Force
 
 class Pomodoro {
@@ -13,28 +14,8 @@ class Pomodoro {
         $this.config = $config
     }
 
-    <#
-     # fn SetActiveTime
-     # $activeTime - minutes
-    ##>
-    [void]setActiveTime([int]$activeTime) {
-        $this.activeTime = 60 * $activeTime
-    }
-
-    <#
-     # fn SetBreakTime 
-     # $breakTime - minutes
-    ##>
-    [void]setBreakTime([int]$breakTime) {
-        $this.breakTime = 60 * $breakTime
-    }
-
-    [void]setAmountPomodoros([int]$amountPomodoros) {
-        $this.amountPomodoros = $amountPomodoros
-    }
-
-    [void]playSound([string]$soundFile) {
-        (New-Object System.Media.SoundPlayer(Resolve-Path "$PSScriptRoot/../Resources/$soundFile")).Play()
+    [void]playSound([string]$filePath) {
+        (New-Object System.Media.SoundPlayer($filePath)).Play()
     }
 
     [void]writeTimer([int]$timeRemaining) {
@@ -51,11 +32,7 @@ class Pomodoro {
     }
 
     [void]chooseOption() {
-        $options = @(
-            @{ activeTime = 0.15; breakTime = 0.15 },
-            @{ activeTime = 25; breakTime = 5 },
-            @{ activeTime = 50; breakTime = 10 }
-        )
+        $options = $this.config.options()
 
         $this.formatHost.write("What Pomodoro do you want? (active x break)", "InfoHeader")
 
@@ -137,7 +114,7 @@ class Pomodoro {
             Write-Host -ForegroundColor White -BackgroundColor Green " Starting pomodoro #$i of $($this.amountPomodoros)"
             Write-Host -ForegroundColor White -BackgroundColor DarkGreen "----------------------"
 
-            $this.playSound('baka-baka-baka.wav')
+            $this.playSound($this.config.sound("start"))
 
             $this.writeTimer($this.activeTime)
 
@@ -145,14 +122,17 @@ class Pomodoro {
 
             if ($i -eq $this.amountPomodoros) {
                 # TODO: FIND FINISH SOUND
-                $this.playSound('the-remorse-drake.wav')
+                # $this.playSound('the-remorse-drake.wav')
+                $this.playSound($this.config.sound("end"))
+
                 Write-Host -ForegroundColor White -BackgroundColor DarkGreen "----------------------"
                 Write-Host -ForegroundColor White -BackgroundColor Green "Pomodoro finished!"
                 Write-Host -ForegroundColor White -BackgroundColor DarkGreen "----------------------"
                 Break
             }
 
-            $this.playSound('the-fire-roots.wav')
+            # $this.playSound('the-fire-roots.wav')
+            $this.playSound($this.config.sound("break"))
 
             $this.writeTimer($this.breakTime)
 
@@ -163,7 +143,7 @@ class Pomodoro {
 
 Function New-Pomodoro {
     $formatHost = New-FormatHost
-    $config = Import-PowerShellDataFile -Path "$PSScriptRoot/../Config/PomodoroConfig.psd1"
+    $config = New-ConfigRepository
     [Pomodoro]::new($formatHost, $config)
 }
 
