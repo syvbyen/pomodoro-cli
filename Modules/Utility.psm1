@@ -11,8 +11,8 @@ class Utility {
     [void]writeTimer([int]$timeRemaining) {
         $originalTime = $timeRemaining
         while ($timeRemaining -gt 0) {
-            # Write-Host -BackgroundColor Magenta -ForegroundColor White -NoNewline "Time remaining: $($this.formatSecondsToMinutes($timeRemaining))`r"
-            Write-Progress -Activity "Time" -Status "Remaining: $($this.formatSecondsToMinutes($timeRemaining))" -PercentComplete ($timeRemaining / $originalTime * 100 )
+            Write-Host -BackgroundColor Magenta -ForegroundColor White -NoNewline "Time remaining: $($this.formatSecondsToMinutes($timeRemaining))`r"
+            # Write-Progress -Activity "Time" -Status "Remaining: $($this.formatSecondsToMinutes($timeRemaining))" -PercentComplete ($timeRemaining / $originalTime * 100 )
 
             Start-Sleep -Seconds 1
             $timeRemaining--
